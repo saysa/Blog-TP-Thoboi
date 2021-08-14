@@ -16,7 +16,7 @@ class PostFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i <= 25; ++$i) {
+        for ($i = 1; $i <= 100; ++$i) {
             $post = new Post();
             $post->setTitle('Article N'.$i);
             $post->setContent('Contenu N'.$i);

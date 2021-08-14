@@ -10,4 +10,21 @@
         <small>{{ post.comments|length }} commentaire(s)</small>
         <a href="{{ path("blog_read", { id: post.id }) }}">Lire la suite</a>
     {% endfor %}
+    <ul>
+        {% if page > 1 %}
+            <li>
+                <a href="{{ path("index", { page: page - 1 }) }}">Précédent</a>
+            </li>
+        {% endif %}
+        {% for p in 1..pages %}
+            <li>
+                <a href="{{ path("index", { page: p }) }}">{{ p }}</a>
+            </li>
+        {% endfor %}
+        {% if page < pages %}
+            <li>
+                <a href="{{ path("index", { page: page + 1 }) }}">Suivant</a>
+            </li>
+        {% endif %}
+    </ul>
 {% endblock %}

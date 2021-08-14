@@ -13,6 +13,11 @@
     <ul>
         {% if page > 1 %}
             <li>
+                <a href="{{ path("index", { page: 1 }) }}">Première page</a>
+            </li>
+        {% endif %}
+        {% if page > 1 %}
+            <li>
                 <a href="{{ path("index", { page: page - 1 }) }}">Précédent</a>
             </li>
         {% endif %}
@@ -24,6 +29,11 @@
         {% if page < pages %}
             <li>
                 <a href="{{ path("index", { page: page + 1 }) }}">Suivant</a>
+            </li>
+        {% endif %}
+        {% if page < pages %}
+            <li>
+                <a href="{{ path("index", { page: pages }) }}">Dernière page</a>
             </li>
         {% endif %}
     </ul>

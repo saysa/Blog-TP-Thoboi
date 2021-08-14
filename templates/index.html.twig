@@ -16,7 +16,7 @@
                 <a href="{{ path("index", { page: page - 1 }) }}">Précédent</a>
             </li>
         {% endif %}
-        {% for p in 1..pages %}
+        {% for p in range %}
             <li>
                 <a href="{{ path("index", { page: p }) }}">{{ p }}</a>
             </li>

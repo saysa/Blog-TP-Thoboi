@@ -19,12 +19,6 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    /**
-     * @param  int  $page
-     * @param  int  $limit
-     *
-     * @return array
-     */
     public function getPaginatedPosts(int $page, int $limit): array
     {
         return $this->createQueryBuilder('p')

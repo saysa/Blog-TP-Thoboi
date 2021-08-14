@@ -35,7 +35,6 @@ class BlogController extends AbstractController
             min($page + 3, $pages)
         );
 
-
         return $this->render('index.html.twig', [
             'posts' => $posts,
             'pages' => $pages,

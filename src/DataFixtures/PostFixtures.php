@@ -20,6 +20,7 @@ class PostFixtures extends Fixture
             $post = new Post();
             $post->setTitle('Article N'.$i);
             $post->setContent('Contenu N'.$i);
+            $post->setImage('http://via.placeholder.com/400x300');
             $manager->persist($post);
 
             for ($j = 1; $j <= rand(5, 15); ++$j) {

@@ -33,6 +33,11 @@ class Post
     private \DateTimeImmutable $publishedAt;
 
     /**
+     * @ORM\Column
+     */
+    private string $image;
+
+    /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      * @Assert\Length(min="10")
@@ -73,6 +78,16 @@ class Post
     public function setPublishedAt(\DateTimeImmutable $publishedAt): void
     {
         $this->publishedAt = $publishedAt;
+    }
+
+    public function getImage(): string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): void
+    {
+        $this->image = $image;
     }
 
     public function getContent(): string

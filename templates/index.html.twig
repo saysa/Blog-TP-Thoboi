@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Blog !</h1>
+    <h1>
+        Blog ! <a href="{{ path("blog_create") }}">Publier un nouvel article</a>
+    </h1>
 
     {% for post in posts %}
         <h2>{{ post.title }}</h2>

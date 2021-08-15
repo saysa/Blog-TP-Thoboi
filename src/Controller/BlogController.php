@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Form\CommentType;
+use App\Form\PostType;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +64,26 @@ class BlogController extends AbstractController
 
         return $this->render('read.html.twig', [
             'post' => $post,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/publier-article", name="blog_create")
+     */
+    public function create(Request $request): Response
+    {
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->persist($post);
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('blog_read', ['id' => $post->getId()]);
+        }
+
+        return $this->render('create.html.twig', [
             'form' => $form->createView(),
         ]);
     }

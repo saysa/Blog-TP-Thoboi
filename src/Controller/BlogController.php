@@ -87,4 +87,22 @@ class BlogController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/modifier-article/{id}", name="blog_update")
+     */
+    public function update(Request $request, Post $post): Response
+    {
+        $form = $this->createForm(PostType::class, $post)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('blog_read', ['id' => $post->getId()]);
+        }
+
+        return $this->render('update.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }

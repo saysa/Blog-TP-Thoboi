@@ -8,13 +8,13 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Form\CommentType;
 use App\Form\PostType;
+use App\Uploader\UploaderInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Class HomeController.
@@ -75,9 +75,7 @@ class BlogController extends AbstractController
      */
     public function create(
         Request $request,
-        SluggerInterface $slugger,
-        string $uploadsAbsoluteDir,
-        string $uploadsRelativeDir
+        UploaderInterface $uploader
     ): Response {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post, [
@@ -88,16 +86,7 @@ class BlogController extends AbstractController
             /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
 
-            $filename = sprintf(
-                '%s_%s.%s',
-                $slugger->slug($file->getClientOriginalName()),
-                uniqid(),
-                $file->getClientOriginalExtension()
-            );
-
-            $file->move($uploadsAbsoluteDir, $filename);
-
-            $post->setImage($uploadsRelativeDir.'/'.$filename);
+            $post->setImage($uploader->upload($file));
 
             $this->getDoctrine()->getManager()->persist($post);
             $this->getDoctrine()->getManager()->flush();
@@ -116,9 +105,7 @@ class BlogController extends AbstractController
     public function update(
         Request $request,
         Post $post,
-        SluggerInterface $slugger,
-        string $uploadsAbsoluteDir,
-        string $uploadsRelativeDir): Response
+        UploaderInterface $uploader): Response
     {
         $form = $this->createForm(PostType::class, $post)->handleRequest($request);
 
@@ -127,16 +114,7 @@ class BlogController extends AbstractController
             $file = $form->get('file')->getData();
 
             if (null !== $file) {
-                $filename = sprintf(
-                    '%s_%s.%s',
-                    $slugger->slug($file->getClientOriginalName()),
-                    uniqid(),
-                    $file->getClientOriginalExtension()
-                );
-
-                $file->move($uploadsAbsoluteDir, $filename);
-
-                $post->setImage($uploadsRelativeDir.'/'.$filename);
+                $post->setImage($uploader->upload($file));
             }
 
             $this->getDoctrine()->getManager()->flush();

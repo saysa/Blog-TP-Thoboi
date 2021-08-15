@@ -10,9 +10,11 @@ use App\Form\CommentType;
 use App\Form\PostType;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Class HomeController.
@@ -71,12 +73,32 @@ class BlogController extends AbstractController
     /**
      * @Route("/publier-article", name="blog_create")
      */
-    public function create(Request $request): Response
-    {
+    public function create(
+        Request $request,
+        SluggerInterface $slugger,
+        string $uploadsAbsoluteDir,
+        string $uploadsRelativeDir
+    ): Response {
         $post = new Post();
-        $form = $this->createForm(PostType::class, $post)->handleRequest($request);
+        $form = $this->createForm(PostType::class, $post, [
+            'validation_groups' => ['Default', 'create'],
+        ])->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->get('file')->getData();
+
+            $filename = sprintf(
+                '%s_%s.%s',
+                $slugger->slug($file->getClientOriginalName()),
+                uniqid(),
+                $file->getClientOriginalExtension()
+            );
+
+            $file->move($uploadsAbsoluteDir, $filename);
+
+            $post->setImage($uploadsRelativeDir.'/'.$filename);
+
             $this->getDoctrine()->getManager()->persist($post);
             $this->getDoctrine()->getManager()->flush();
 
@@ -91,11 +113,32 @@ class BlogController extends AbstractController
     /**
      * @Route("/modifier-article/{id}", name="blog_update")
      */
-    public function update(Request $request, Post $post): Response
+    public function update(
+        Request $request,
+        Post $post,
+        SluggerInterface $slugger,
+        string $uploadsAbsoluteDir,
+        string $uploadsRelativeDir): Response
     {
         $form = $this->createForm(PostType::class, $post)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->get('file')->getData();
+
+            if (null !== $file) {
+                $filename = sprintf(
+                    '%s_%s.%s',
+                    $slugger->slug($file->getClientOriginalName()),
+                    uniqid(),
+                    $file->getClientOriginalExtension()
+                );
+
+                $file->move($uploadsAbsoluteDir, $filename);
+
+                $post->setImage($uploadsRelativeDir.'/'.$filename);
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('blog_read', ['id' => $post->getId()]);

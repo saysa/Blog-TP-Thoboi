@@ -38,7 +38,7 @@ class BlogController extends AbstractController
             min($page + 3, $pages)
         );
 
-        return $this->render('index.html.twig', [
+        return $this->render('blog/index.html.twig', [
             'posts' => $posts,
             'pages' => $pages,
             'page' => $page,
@@ -62,7 +62,7 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog_read', ['id' => $post->getId()]);
         }
 
-        return $this->render('read.html.twig', [
+        return $this->render('blog/read.html.twig', [
             'post' => $post,
             'form' => $form->createView(),
         ]);
@@ -83,7 +83,7 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog_read', ['id' => $post->getId()]);
         }
 
-        return $this->render('create.html.twig', [
+        return $this->render('blog/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -101,7 +101,7 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog_read', ['id' => $post->getId()]);
         }
 
-        return $this->render('update.html.twig', [
+        return $this->render('blog/update.html.twig', [
             'form' => $form->createView(),
         ]);
     }

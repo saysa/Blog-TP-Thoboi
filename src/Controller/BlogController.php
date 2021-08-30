@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Form\CommentType;
 use App\Form\PostType;
+use App\Security\Voter\PostVoter;
 use App\Uploader\UploaderInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -110,6 +111,8 @@ class BlogController extends AbstractController
         Post $post,
         UploaderInterface $uploader): Response
     {
+        $this->denyAccessUnlessGranted(PostVoter::EDIT, $post);
+
         $form = $this->createForm(PostType::class, $post)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

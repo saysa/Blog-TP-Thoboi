@@ -110,6 +110,11 @@ class Post
         $this->user = $user;
     }
 
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
     public function getComments(): Collection
     {
         return $this->comments;

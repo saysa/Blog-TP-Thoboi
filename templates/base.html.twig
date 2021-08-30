@@ -21,6 +21,9 @@
                     </li>
                     {% if is_granted("ROLE_USER") %}
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ path("blog_create") }}">Publier un article</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ path("security_logout") }}">Se déconnecter</a>
                         </li>
                     {% else %}

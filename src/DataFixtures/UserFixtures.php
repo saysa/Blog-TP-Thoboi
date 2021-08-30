@@ -24,7 +24,8 @@ class UserFixtures extends Fixture
             $user->setPseudo(sprintf('pseudo+%d', $i));
             $user->setPassword($this->userPasswordEncoder->encodePassword($user, 'password'));
             $manager->persist($user);
-            $manager->flush();
+            $this->setReference(sprintf('user-%d', $i), $user);
         }
+        $manager->flush();
     }
 }

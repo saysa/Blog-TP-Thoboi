@@ -77,7 +77,10 @@ class BlogController extends AbstractController
         Request $request,
         UploaderInterface $uploader
     ): Response {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $post = new Post();
+        $post->setUser($this->getUser());
         $form = $this->createForm(PostType::class, $post, [
             'validation_groups' => ['Default', 'create'],
         ])->handleRequest($request);

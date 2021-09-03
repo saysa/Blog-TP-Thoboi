@@ -16,7 +16,9 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <a href="{{ path("blog_read", { id: post.id }) }}">Lire la suite</a>
-                        <a href="{{ path("blog_update", { id: post.id }) }}">Modifier</a>
+                        {% if is_granted('edit', post) %}
+                            <a href="{{ path("blog_update", { id: post.id }) }}">Modifier</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

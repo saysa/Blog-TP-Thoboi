@@ -22,7 +22,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             $post->setTitle('Article N'.$i);
             $post->setContent('Contenu N'.$i);
             $post->setUser($this->getReference(sprintf('user-%d', ($i % 10) + 1)));
-            $post->setImage('http://via.placeholder.com/400x300');
+            $post->setImage('https://picsum.photos/id/'.$i.'/400/300');
             $manager->persist($post);
 
             for ($j = 1; $j <= rand(5, 15); ++$j) {

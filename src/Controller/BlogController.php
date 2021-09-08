@@ -57,7 +57,14 @@ class BlogController extends AbstractController
     {
         $comment = new Comment();
         $comment->setPost($post);
-        $form = $this->createForm(CommentType::class, $comment)->handleRequest($request);
+
+        if ($this->isGranted('ROLE_USER')) {
+            $comment->setUser($this->getUser());
+        }
+
+        $form = $this->createForm(CommentType::class, $comment, [
+            'validation_groups' => $this->isGranted('ROLE_USER') ? 'Default' : ['Default', 'anonymous'],
+        ])->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
